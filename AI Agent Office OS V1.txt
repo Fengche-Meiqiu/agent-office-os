@@ -1,0 +1,935 @@
+AI Agent Office OS V1
+产品需求说明书 + 技术开发文档
+
+Version: 1.0
+
+Author: Product Owner
+
+Status: Approved
+
+---
+
+# 1. 产品定位
+
+## 1.1 产品名称
+
+AI Agent Office OS
+
+## 1.2 产品愿景
+
+构建一个由数字员工组成的虚拟办公室。
+
+用户不直接管理任务。
+
+用户管理的是：
+
+数字员工（Agent）。
+
+系统中的Agent来自：
+
+* Hermes
+* OpenClaw
+* CrewAI
+* LangGraph
+* 未来其他Agent平台
+
+Office OS负责：
+
+* 发现Agent
+* 雇佣Agent
+* 管理Agent
+* 协调Agent
+* 组织Agent会议
+* 沉淀Agent成果
+
+Office OS不是Agent运行平台。
+
+Agent运行在外部平台。
+
+---
+
+# 2. 核心概念
+
+## Agent Pool（人才库）
+
+来自Hermes等平台的全部Agent。
+
+相当于人才市场。
+
+---
+
+## Employed Agent（已雇佣员工）
+
+已经进入Office组织架构的Agent。
+
+拥有：
+
+工位
+
+任务
+
+会议权限
+
+历史记录
+
+---
+
+## Fired Agent（已解雇员工）
+
+从Office移除。
+
+不删除源平台Agent。
+
+仅解除Office绑定。
+
+---
+
+# 3. 用户流程
+
+## 场景1
+
+浏览人才市场
+
+↓
+
+查看Hermes Agent
+
+↓
+
+查看能力
+
+↓
+
+点击雇佣
+
+↓
+
+进入办公室
+
+---
+
+## 场景2
+
+查看办公室
+
+↓
+
+查看员工状态
+
+↓
+
+查看任务
+
+↓
+
+查看成果
+
+---
+
+## 场景3
+
+与员工聊天
+
+↓
+
+查看员工档案
+
+↓
+
+发送消息
+
+↓
+
+获得回复
+
+---
+
+## 场景4
+
+组织会议
+
+↓
+
+选择员工
+
+↓
+
+创建会议
+
+↓
+
+员工讨论
+
+↓
+
+形成决议
+
+---
+
+## 场景5
+
+解雇员工
+
+↓
+
+解除Office绑定
+
+↓
+
+退出办公室
+
+---
+
+# 4. 系统模块
+
+# 模块1
+
+人才市场（Agent Marketplace）
+
+## 功能
+
+展示Hermes发现的Agent。
+
+显示：
+
+头像
+
+名称
+
+职位
+
+平台
+
+技能
+
+工具能力
+
+状态
+
+---
+
+支持：
+
+搜索
+
+筛选
+
+查看详情
+
+雇佣
+
+---
+
+## 雇佣流程
+
+点击：
+
+雇佣
+
+创建：
+
+office_agent
+
+映射关系
+
+进入办公室
+
+---
+
+# 模块2
+
+虚拟办公室
+
+首页
+
+展示已雇佣Agent。
+
+布局：
+
+工位视图
+
+支持：
+
+拖拽排序
+
+查看状态
+
+打开详情
+
+---
+
+Agent状态：
+
+ONLINE
+
+WORKING
+
+MEETING
+
+OFFLINE
+
+ERROR
+
+---
+
+# 模块3
+
+员工档案（Agent Profile）
+
+## Tab 1
+
+基本信息
+
+显示：
+
+头像
+
+名称
+
+职位
+
+平台
+
+Agent ID
+
+雇佣时间
+
+最后活跃时间
+
+---
+
+## Tab 2
+
+Soul（人格）
+
+显示：
+
+身份
+
+目标
+
+工作原则
+
+行为风格
+
+人格描述
+
+---
+
+## Tab 3
+
+Skills（技能）
+
+显示：
+
+技能标签
+
+例如：
+
+市场分析
+
+Python开发
+
+财务分析
+
+制造优化
+
+战略规划
+
+---
+
+## Tab 4
+
+Tools（工具能力）
+
+显示：
+
+Agent可调用工具
+
+例如：
+
+Web Search
+
+Python
+
+Shell
+
+SSH
+
+Database
+
+Browser
+
+Excel
+
+Email
+
+MCP
+
+---
+
+## Tab 5
+
+Memory（记忆）
+
+显示：
+
+Agent当前长期记忆摘要
+
+例如：
+
+负责新能源行业研究
+
+负责服务器运维
+
+负责供应链分析
+
+支持折叠展开
+
+V1只读
+
+禁止修改
+
+---
+
+## Tab 6
+
+Task History
+
+显示最近100条任务
+
+字段：
+
+任务名称
+
+时间
+
+状态
+
+成果链接
+
+---
+
+## Tab 7
+
+Chat History
+
+显示最近聊天记录
+
+---
+
+## Tab 8
+
+Performance
+
+显示：
+
+累计任务数
+
+成功任务数
+
+失败任务数
+
+会议参与次数
+
+最后活跃时间
+
+---
+
+## Tab 9
+
+Employment
+
+显示：
+
+雇佣时间
+
+部门
+
+直属上级
+
+状态
+
+按钮：
+
+解雇员工
+
+---
+
+# 模块4
+
+聊天中心
+
+支持：
+
+单独聊天
+
+历史上下文
+
+Markdown
+
+代码高亮
+
+文件链接
+
+---
+
+# 模块5
+
+任务中心
+
+显示全部任务。
+
+状态：
+
+Pending
+
+Running
+
+Completed
+
+Failed
+
+Cancelled
+
+---
+
+字段：
+
+任务名称
+
+执行员工
+
+开始时间
+
+结束时间
+
+耗时
+
+状态
+
+成果
+
+---
+
+# 模块6
+
+成果中心
+
+统一管理：
+
+任务成果
+
+会议成果
+
+上传文档
+
+---
+
+支持：
+
+Markdown预览
+
+PDF预览
+
+HTML预览
+
+图片预览
+
+下载
+
+打开链接
+
+---
+
+# 模块7
+
+会议室
+
+## 创建会议
+
+选择：
+
+2~10个员工
+
+输入：
+
+会议主题
+
+---
+
+## 会议流程
+
+Round 1
+
+独立意见
+
+Round 2
+
+交叉评论
+
+Round 3
+
+达成共识
+
+Round 4
+
+形成结论
+
+---
+
+输出：
+
+会议纪要
+
+决策建议
+
+行动项
+
+---
+
+# 模块8
+
+组织架构
+
+显示：
+
+CEO
+
+部门
+
+员工
+
+支持：
+
+拖拽调整
+
+设置直属上级
+
+设置部门
+
+---
+
+# 5. Hermes接入
+
+## Agent Discovery
+
+从Hermes同步Agent。
+
+同步：
+
+名称
+
+描述
+
+技能
+
+工具
+
+记忆摘要
+
+状态
+
+---
+
+## Agent Mapping
+
+office_agent
+
+对应
+
+hermes_agent
+
+---
+
+数据库：
+
+agent_mapping
+
+字段：
+
+office_agent_id
+
+platform
+
+platform_agent_id
+
+---
+
+## Chat
+
+Office
+
+↓
+
+Gateway
+
+↓
+
+Hermes
+
+---
+
+## Task
+
+Office
+
+↓
+
+Gateway
+
+↓
+
+Hermes
+
+↓
+
+Webhook
+
+↓
+
+Office
+
+---
+
+# 6. Agent Gateway
+
+统一适配层。
+
+Office不直接连接Hermes。
+
+全部通过Gateway。
+
+---
+
+Adapter标准：
+
+profile()
+
+skills()
+
+tools()
+
+memory()
+
+chat()
+
+execute_task()
+
+get_task()
+
+---
+
+# 7. 数据库
+
+agent_marketplace
+
+人才库
+
+---
+
+office_agent
+
+已雇佣员工
+
+---
+
+agent_mapping
+
+平台映射
+
+---
+
+task
+
+任务
+
+---
+
+meeting
+
+会议
+
+---
+
+meeting_message
+
+会议消息
+
+---
+
+chat_history
+
+聊天记录
+
+---
+
+agent_performance
+
+员工绩效
+
+---
+
+event_log
+
+系统事件
+
+---
+
+# 8. 技术栈
+
+Frontend
+
+React
+
+TypeScript
+
+Vite
+
+Tailwind
+
+Shadcn UI
+
+React Query
+
+---
+
+Backend
+
+FastAPI
+
+SQLAlchemy
+
+Pydantic
+
+---
+
+Database
+
+SQLite
+
+---
+
+Storage
+
+/storage
+
+/uploads
+
+/outputs
+
+---
+
+Deployment
+
+Docker Compose
+
+Nginx
+
+---
+
+# 9. 性能目标
+
+服务器：
+
+腾讯云
+
+4C4G
+
+剩余可用内存：
+
+约2.3G
+
+---
+
+支持：
+
+人才库Agent
+
+≤500
+
+已雇佣员工
+
+≤50
+
+同时任务
+
+≤20
+
+同时会议
+
+≤5
+
+---
+
+首页加载
+
+<2秒
+
+聊天响应
+
+<5秒
+
+任务查询
+
+<1秒
+
+---
+
+# 10. V1边界
+
+必须实现：
+
+√ 人才市场
+
+√ Agent雇佣
+
+√ Agent解雇
+
+√ 虚拟办公室
+
+√ 员工档案
+
+√ 技能展示
+
+√ 工具展示
+
+√ 记忆展示
+
+√ 聊天中心
+
+√ 任务中心
+
+√ 成果中心
+
+√ 会议室
+
+√ 组织架构
+
+√ Hermes接入
+
+√ Webhook同步
+
+√ Agent Gateway
+
+---
+
+不实现：
+
+× Agent记忆编辑
+
+× Agent成长系统
+
+× Agent自动招聘
+
+× Agent自动创建Agent
+
+× Agent自治组织
+
+× 多平台统一搜索
+
+× Agent薪酬体系
+
+× Agent KPI自动优化
+
+以上延后至V2。

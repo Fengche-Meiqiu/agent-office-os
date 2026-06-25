@@ -1,0 +1,376 @@
+# Hermes Adapter 技术规范
+
+## Hermes Adapter Technical Specification
+
+Version: V1.0
+
+---
+
+# 1. 文档目标
+
+定义Hermes与Office OS之间的标准接入协议。
+
+Hermes作为Agent Runtime。
+
+Office OS作为Agent Management System。
+
+两者通过Agent Gateway进行通信。
+
+---
+
+# 2. 整体架构
+
+Office UI
+
+↓
+
+Office Backend
+
+↓
+
+Agent Gateway
+
+↓
+
+Hermes Adapter
+
+↓
+
+Hermes
+
+---
+
+# 3. Adapter职责
+
+Hermes Adapter负责：
+
+1. Agent发现
+2. Agent信息同步
+3. Agent聊天
+4. Agent任务派发
+5. Agent状态同步
+6. Webhook接收
+7. 数据格式转换
+
+---
+
+# 4. Agent发现
+
+## 目标
+
+同步Hermes中的Agent。
+
+---
+
+接口：
+
+discover_agents()
+
+返回：
+
+[
+{
+"id":"hermes_agent_001",
+"name":"市场分析师",
+"description":"负责市场研究",
+"status":"online"
+}
+]
+
+---
+
+同步周期：
+
+5分钟
+
+支持手动刷新
+
+---
+
+# 5. Agent Profile
+
+接口：
+
+get_profile(agent_id)
+
+返回：
+
+{
+"id":"hermes_agent_001",
+
+"name":"市场分析师",
+
+"role":"Market Analyst",
+
+"description":"负责行业研究",
+
+"platform":"Hermes"
+}
+
+---
+
+# 6. Skill同步
+
+接口：
+
+get_skills(agent_id)
+
+返回：
+
+[
+"market_analysis",
+"industry_research",
+"strategy"
+]
+
+---
+
+# 7. Tool同步
+
+接口：
+
+get_tools(agent_id)
+
+返回：
+
+[
+{
+"name":"web_search",
+"type":"search"
+},
+{
+"name":"python",
+"type":"code"
+},
+{
+"name":"shell",
+"type":"system"
+}
+]
+
+---
+
+# 8. Memory同步
+
+接口：
+
+get_memory(agent_id)
+
+返回：
+
+{
+"summary":"负责新能源行业研究"
+}
+
+V1仅展示摘要。
+
+不支持编辑。
+
+---
+
+# 9. Chat
+
+接口：
+
+chat(agent_id,message)
+
+返回：
+
+{
+"reply":"..."
+}
+
+---
+
+Office流程：
+
+用户
+
+↓
+
+Office
+
+↓
+
+Gateway
+
+↓
+
+Hermes
+
+↓
+
+返回结果
+
+---
+
+# 10. Task
+
+接口：
+
+execute_task()
+
+请求：
+
+{
+"title":"分析新能源汽车行业",
+"content":"..."
+}
+
+返回：
+
+{
+"task_id":"task_123"
+}
+
+---
+
+# 11. Task Query
+
+接口：
+
+get_task(task_id)
+
+返回：
+
+{
+"status":"running"
+}
+
+或
+
+{
+"status":"completed",
+
+"result":"..."
+}
+
+---
+
+# 12. Meeting Support
+
+接口：
+
+meeting_respond()
+
+请求：
+
+{
+"meeting_id":"meeting_001",
+
+"topic":"是否投资AI行业",
+
+"history":[]
+}
+
+返回：
+
+{
+"opinion":"..."
+}
+
+---
+
+# 13. Webhook
+
+Hermes主动通知Office。
+
+POST
+
+/api/webhook/hermes
+
+---
+
+支持事件：
+
+task_created
+
+task_started
+
+task_completed
+
+task_failed
+
+agent_online
+
+agent_offline
+
+---
+
+示例：
+
+{
+"event":"task_completed",
+
+"task_id":"123",
+
+"agent_id":"001",
+
+"status":"completed",
+
+"result":"..."
+}
+
+---
+
+# 14. Adapter统一接口
+
+class AgentAdapter:
+
+```
+discover_agents()
+
+get_profile()
+
+get_skills()
+
+get_tools()
+
+get_memory()
+
+chat()
+
+execute_task()
+
+get_task()
+
+meeting_respond()
+```
+
+---
+
+# 15. V1要求
+
+必须实现：
+
+Agent发现
+
+Agent雇佣
+
+Agent聊天
+
+Agent任务
+
+Webhook同步
+
+工具展示
+
+技能展示
+
+记忆展示
+
+会议支持
+
+---
+
+暂不实现：
+
+Memory编辑
+
+Agent创建
+
+Agent删除
+
+Agent训练
+
+Agent成长系统
