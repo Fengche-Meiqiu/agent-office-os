@@ -1,0 +1,14 @@
+{
+  "version": "v0.0.0",
+  "packageUrl": "http://47.77.194.50/agent-office-os/releases/v0.0.0/agent-office-os-v0.0.0.zip",
+  "sha256": "replace-with-package-sha256",
+  "deployScript": "ops/deploy.sh",
+  "checkScript": "ops/check.sh",
+  "rollbackScript": "ops/rollback.sh",
+  "requiredEnv": {
+    "APP_DIR": "/opt/agent-office-os",
+    "APP_BASE_URL": "http://127.0.0.1",
+    "BACKEND_URL": "http://127.0.0.1:8000",
+    "HERMES_URL": "http://127.0.0.1:8001"
+  }
+}
