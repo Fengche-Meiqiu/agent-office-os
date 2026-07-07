@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { outputApi } from '@/lib/mockApi';
+import { outputApi } from '@/lib/api';
 
-// 获取成果列表
+// 鑾峰彇鎴愭灉鍒楄〃
 export function useOutputs() {
   return useQuery({
     queryKey: ['outputs'],
@@ -9,7 +9,7 @@ export function useOutputs() {
   });
 }
 
-// 获取单个成果
+// 鑾峰彇鍗曚釜鎴愭灉
 export function useOutput(id: string | undefined) {
   return useQuery({
     queryKey: ['outputs', id],

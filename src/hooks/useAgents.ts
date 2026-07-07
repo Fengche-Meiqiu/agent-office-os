@@ -1,7 +1,7 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { marketplaceApi, officeAgentApi } from '@/lib/mockApi';
+﻿import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { marketplaceApi, officeAgentApi } from '@/lib/api';
 
-// 获取人才市场 Agent 列表
+// 鑾峰彇浜烘墠甯傚満 Agent 鍒楄〃
 export function useMarketplaceAgents() {
   return useQuery({
     queryKey: ['marketplaceAgents'],
@@ -9,7 +9,7 @@ export function useMarketplaceAgents() {
   });
 }
 
-// 雇佣 Agent
+// 闆囦剑 Agent
 export function useHireAgent() {
   const queryClient = useQueryClient();
   return useMutation({
@@ -22,7 +22,7 @@ export function useHireAgent() {
   });
 }
 
-// 获取已雇佣 Agent 列表
+// 鑾峰彇宸查泧浣?Agent 鍒楄〃
 export function useOfficeAgents() {
   return useQuery({
     queryKey: ['officeAgents'],
@@ -30,7 +30,7 @@ export function useOfficeAgents() {
   });
 }
 
-// 获取单个 Agent
+// 鑾峰彇鍗曚釜 Agent
 export function useOfficeAgent(id: string | undefined) {
   return useQuery({
     queryKey: ['officeAgents', id],
@@ -39,13 +39,25 @@ export function useOfficeAgent(id: string | undefined) {
   });
 }
 
-// 解雇 Agent
+// 瑙ｉ泧 Agent
 export function useFireAgent() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (id: string) => officeAgentApi.fireAgent(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['officeAgents'] });
+      queryClient.invalidateQueries({ queryKey: ['eventLogs'] });
+    },
+  });
+}
+
+
+export function useSyncMarketplaceAgents() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: () => marketplaceApi.syncAgents?.() ?? Promise.resolve({ message: 'mock sync skipped', count: 0 }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['marketplaceAgents'] });
       queryClient.invalidateQueries({ queryKey: ['eventLogs'] });
     },
   });

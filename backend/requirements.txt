@@ -1,23 +1,12 @@
-# Agent Office OS 后端依赖
-# 轻量化设计，适配 4C4G 腾讯云服务器（剩余 2.3G 内存）
-
-# Web 框架
+﻿# Backend runtime dependencies
 fastapi==0.115.6
-
-# ASGI 服务器（单 worker 模式，省内存）
 uvicorn[standard]==0.34.0
-
-# ORM
 sqlalchemy==2.0.36
-
-# 数据校验
 pydantic==2.10.4
 pydantic-settings==2.7.1
-
-# 异步 HTTP 客户端（调用 Hermes API）
 httpx==0.28.1
-
-# 文件处理（成果中心上传/下载）
 python-multipart==0.0.20
 
-# SQLite（Python 内置，无需额外安装）
+# Backend quality gates
+pytest==8.3.4
+pytest-asyncio==0.24.0

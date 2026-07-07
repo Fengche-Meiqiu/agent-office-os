@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { meetingApi } from '@/lib/mockApi';
+import { meetingApi } from '@/lib/api';
 
-// 获取会议列表
+// 鑾峰彇浼氳鍒楄〃
 export function useMeetings() {
   return useQuery({
     queryKey: ['meetings'],
@@ -9,7 +9,7 @@ export function useMeetings() {
   });
 }
 
-// 获取单个会议
+// 鑾峰彇鍗曚釜浼氳
 export function useMeeting(id: string | undefined) {
   return useQuery({
     queryKey: ['meetings', id],
@@ -18,7 +18,7 @@ export function useMeeting(id: string | undefined) {
   });
 }
 
-// 创建会议
+// 鍒涘缓浼氳
 export function useCreateMeeting() {
   const queryClient = useQueryClient();
   return useMutation({
@@ -31,7 +31,7 @@ export function useCreateMeeting() {
   });
 }
 
-// 主持人向当前轮次发送消息
+// 涓绘寔浜哄悜褰撳墠杞鍙戦€佹秷鎭?
 export function useSendMeetingMessage() {
   const queryClient = useQueryClient();
   return useMutation({
@@ -44,7 +44,7 @@ export function useSendMeetingMessage() {
   });
 }
 
-// 会议进入下一轮
+// 浼氳杩涘叆涓嬩竴杞?
 export function useNextRound() {
   const queryClient = useQueryClient();
   return useMutation({
@@ -57,7 +57,7 @@ export function useNextRound() {
   });
 }
 
-// 结束会议
+// 缁撴潫浼氳
 export function useFinishMeeting() {
   const queryClient = useQueryClient();
   return useMutation({

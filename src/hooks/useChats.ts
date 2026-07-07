@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { chatApi } from '@/lib/mockApi';
+import { chatApi } from '@/lib/api';
 
-// 获取某个 Agent 的聊天记录
+// 鑾峰彇鏌愪釜 Agent 鐨勮亰澶╄褰?
 export function useChatMessages(agentId: string | undefined) {
   return useQuery({
     queryKey: ['chatMessages', agentId],
@@ -10,7 +10,7 @@ export function useChatMessages(agentId: string | undefined) {
   });
 }
 
-// 发送消息
+// 鍙戦€佹秷鎭?
 export function useSendMessage() {
   const queryClient = useQueryClient();
   return useMutation({

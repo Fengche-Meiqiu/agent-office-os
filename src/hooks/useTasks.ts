@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { taskApi } from '@/lib/mockApi';
+import { taskApi } from '@/lib/api';
 
-// 获取任务列表
+// 鑾峰彇浠诲姟鍒楄〃
 export function useTasks() {
   return useQuery({
     queryKey: ['tasks'],
@@ -9,7 +9,7 @@ export function useTasks() {
   });
 }
 
-// 获取单个任务
+// 鑾峰彇鍗曚釜浠诲姟
 export function useTask(id: string | undefined) {
   return useQuery({
     queryKey: ['tasks', id],

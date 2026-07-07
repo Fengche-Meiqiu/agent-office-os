@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { eventLogApi } from '@/lib/mockApi';
+import { eventLogApi } from '@/lib/api';
 
-// 获取系统事件日志
+// 鑾峰彇绯荤粺浜嬩欢鏃ュ織
 export function useEventLogs() {
   return useQuery({
     queryKey: ['eventLogs'],
@@ -9,7 +9,7 @@ export function useEventLogs() {
   });
 }
 
-// 清空系统事件日志
+// 娓呯┖绯荤粺浜嬩欢鏃ュ織
 export function useClearEventLogs() {
   const queryClient = useQueryClient();
   return useMutation({

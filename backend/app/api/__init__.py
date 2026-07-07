@@ -1,10 +1,10 @@
 """
-API 路由聚合模块
-把所有路由文件统一导入，方便 main.py 一次性注册
+API 璺敱鑱氬悎妯″潡
+鎶婃墍鏈夎矾鐢辨枃浠剁粺涓€瀵煎叆锛屾柟渚?main.py 涓€娆℃€ф敞鍐?
 """
-from . import marketplace, office, chat, tasks, meetings, outputs, organization, webhook, event_logs
+from . import marketplace, office, chat, tasks, meetings, outputs, webhook, event_logs
 
-# 暴露所有路由模块，main.py 可以遍历注册
+# 鏆撮湶鎵€鏈夎矾鐢辨ā鍧楋紝main.py 鍙互閬嶅巻娉ㄥ唽
 __all__ = [
     "marketplace",
     "office",
@@ -12,7 +12,6 @@ __all__ = [
     "tasks",
     "meetings",
     "outputs",
-    "organization",
     "webhook",
     "event_logs",
 ]

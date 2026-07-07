@@ -1,57 +1,78 @@
-# React + TypeScript + Vite
+﻿# Agent Office OS
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Agent Office OS is a Hermes-backed workspace for selecting AI agents, chatting with them, starting tasks, running basic meetings, and collecting results.
 
-Currently, two official plugins are available:
+## V0.1.0 Goal
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+V0.1.0 focuses on one reliable user journey:
 
-## Expanding the ESLint configuration
+Open the system -> sync agents from Hermes -> review agent details -> hire an agent -> chat -> send a `/task` request -> monitor it in Task Center -> review the result in Outputs.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Scope
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+Included in V0.1.0:
+
+- Hermes agent synchronization as the first platform connector.
+- Agent marketplace and office agent list.
+- Single-agent `/chat` and `/task` flows.
+- Task Center for task status tracking.
+- Outputs Center for task and meeting results.
+- Basic meeting room flow.
+- Production deployment through GitHub Release, Silicon Valley mirror, and Tencent watcher.
+- Organization structure removed from product navigation and backend API.
+
+Deferred after V0.1.0:
+
+- Full meeting pause/resume and continuous autonomous discussion.
+- Mature file transfer in both directions.
+- Multiple external agent platforms.
+- Advanced role-based permissions.
+
+## Local Development
+
+Install frontend dependencies:
+
+```bash
+npm ci
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Run the frontend:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  extends: [
-    // other configs...
-    // Enable lint rules for React
-    reactX.configs['recommended-typescript'],
-    // Enable lint rules for React DOM
-    reactDom.configs.recommended,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```bash
+npm run dev
 ```
+
+Run the backend locally:
+
+```bash
+cd backend
+pip install -r requirements.txt
+uvicorn app.main:app --reload --port 8000
+```
+
+## Quality Gates
+
+Before a release package is published, run:
+
+```bash
+npm run check
+npm run build
+python -m compileall backend/app
+python -m pytest backend/tests
+```
+
+## Deployment Channel
+
+V0.1.0 is deployed by release package:
+
+1. Codex prepares and publishes a GitHub Release package.
+2. Silicon Valley mirror pulls the GitHub Release and exposes `manifest.json` plus the package.
+3. Tencent watcher checks the mirror every 5 minutes.
+4. Tencent watcher downloads, verifies SHA256, extracts, and runs `ops/deploy.sh`.
+5. Deployment reports are written under `/opt/agent-office-os-agent/reports/`.
+
+Hermes executes deployment commands only. Code changes are made in this repository.
+
+## Connector Standard
+
+Hermes is the first implementation of the platform connector contract. See `docs/HERMES_INTEGRATION_SPEC.md` for required fields and API expectations.

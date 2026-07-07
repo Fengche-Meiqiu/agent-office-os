@@ -7,25 +7,24 @@ import Tasks from "@/pages/Tasks";
 import Outputs from "@/pages/Outputs";
 import Meeting from "@/pages/Meeting";
 import Profile from "@/pages/Profile";
-import Organization from "@/pages/Organization";
 import Tools from "@/pages/Tools";
 import Settings from "@/pages/Settings";
 import Dashboard from "@/pages/Dashboard";
 
 /**
- * 应用路由总入口
- * 把所有页面都挂在 MainLayout 下，保证左侧边栏和顶部导航一直显示
+ * 搴旂敤璺敱鎬诲叆鍙?
+ * 鎶婃墍鏈夐〉闈㈤兘鎸傚湪 MainLayout 涓嬶紝淇濊瘉宸︿晶杈规爮鍜岄《閮ㄥ鑸竴鐩存樉绀?
  */
 export default function App() {
   return (
     <Router>
       <Routes>
-        {/* 主布局：包含侧边栏、顶部栏 */}
+        {/* 涓诲竷灞€锛氬寘鍚晶杈规爮銆侀《閮ㄦ爮 */}
         <Route path="/" element={<MainLayout />}>
-          {/* 默认打开办公室首页 */}
+          {/* 榛樿鎵撳紑鍔炲叕瀹ら椤?*/}
           <Route index element={<Office />} />
 
-          {/* 各业务页面 */}
+          {/* 鍚勪笟鍔￠〉闈?*/}
           <Route path="marketplace" element={<Marketplace />} />
           <Route path="chat" element={<Chat />} />
           <Route path="chat/:id" element={<Chat />} />
@@ -34,12 +33,11 @@ export default function App() {
           <Route path="meeting" element={<Meeting />} />
           <Route path="meeting/:id" element={<Meeting />} />
           <Route path="profile/:id" element={<Profile />} />
-          <Route path="organization" element={<Organization />} />
           <Route path="tools" element={<Tools />} />
           <Route path="settings" element={<Settings />} />
           <Route path="dashboard" element={<Dashboard />} />
 
-          {/* 未知路径回到首页 */}
+          {/* 鏈煡璺緞鍥炲埌棣栭〉 */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>
