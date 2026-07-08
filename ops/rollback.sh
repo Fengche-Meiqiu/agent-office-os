@@ -12,7 +12,17 @@ if [ ! -d "${BACKUP_DIR}" ]; then
 fi
 
 mkdir -p "${APP_DIR}"
-rsync -a --delete "${BACKUP_DIR}/" "${APP_DIR}/"
+
+if command -v rsync >/dev/null 2>&1; then
+  rsync -a --delete "${BACKUP_DIR}/" "${APP_DIR}/"
+else
+  echo "[rollback] rsync not found; using tar copy fallback"
+  tmp_tar="$(mktemp)"
+  tar -C "${BACKUP_DIR}" -cf "${tmp_tar}" .
+  rm -rf "${APP_DIR:?}"/*
+  tar -xf "${tmp_tar}" -C "${APP_DIR}"
+  rm -f "${tmp_tar}"
+fi
 
 cd "${APP_DIR}"
 if [ -f "${COMPOSE_FILE}" ]; then

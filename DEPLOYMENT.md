@@ -1,4 +1,4 @@
-﻿# Agent Office OS Deployment Guide
+# Agent Office OS Deployment Guide
 
 This guide is for the Hermes deployment operator. Code changes happen in GitHub. Hermes only runs the fixed deployment flow.
 
@@ -6,7 +6,7 @@ This guide is for the Hermes deployment operator. Code changes happen in GitHub.
 
 ```text
 User browser
-  -> nginx :80
+  -> nginx :8080 by default
       /        -> frontend static files
       /api/*   -> office-backend :8000
   -> office-backend
@@ -98,7 +98,15 @@ VITE_USE_MOCK=false
 VITE_API_BASE=
 ```
 
-Backend production config is set in `docker-compose.yml`:
+
+Default public web port:
+
+```env
+OFFICE_HTTP_PORT=8080
+```
+
+`docker-compose.yml` maps `${OFFICE_HTTP_PORT:-8080}:80` so Tencent Cloud does not conflict with the existing Caddy service on port 80.
+Backend production config is set in docker-compose.yml:
 
 ```yaml
 HERMES_URL=http://host.docker.internal:8001
@@ -108,7 +116,7 @@ HERMES_URL=http://host.docker.internal:8001
 
 After deployment, verify:
 
-- The web app opens on port 80.
+- The web app opens on port 8080 by default. Override with `OFFICE_HTTP_PORT` only when needed.
 - `/api/health` returns `status=ok`.
 - `/api/marketplace/agents` returns a list or a clear Hermes connection error.
 - Organization API is removed: `/api/organization` returns 404.
