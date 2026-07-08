@@ -1,4 +1,4 @@
-﻿from fastapi.testclient import TestClient
+from fastapi.testclient import TestClient
 
 from app.main import app
 
@@ -74,3 +74,62 @@ def test_v010_hermes_task_flow(monkeypatch):
         assert outputs_response.status_code == 200
         outputs = outputs_response.json()
         assert any(output["id"] == created_task["outputId"] for output in outputs)
+
+def test_v010_meeting_flow_creates_output(monkeypatch):
+    async def fake_discover_agents():
+        return [
+            {
+                "id": "hermes_test_v010_meeting_agent_a",
+                "name": "Meeting Agent A",
+                "avatar": "",
+                "title": "Meeting participant",
+                "platform": "Hermes",
+                "skills": ["discussion"],
+                "tools": [],
+                "status": "ONLINE",
+                "description": "Synthetic meeting participant A.",
+            },
+            {
+                "id": "hermes_test_v010_meeting_agent_b",
+                "name": "Meeting Agent B",
+                "avatar": "",
+                "title": "Meeting participant",
+                "platform": "Hermes",
+                "skills": ["discussion"],
+                "tools": [],
+                "status": "ONLINE",
+                "description": "Synthetic meeting participant B.",
+            },
+        ]
+
+    async def fake_meeting_respond(agent_id: str, meeting_id: str, topic: str, history: list):
+        return {"opinion": f"{agent_id} responded to {topic}"}
+
+    monkeypatch.setattr("app.api.marketplace.hermes_adapter.discover_agents", fake_discover_agents)
+    monkeypatch.setattr("app.api.meetings.hermes_adapter.meeting_respond", fake_meeting_respond)
+
+    with TestClient(app) as client:
+        market_response = client.get("/api/marketplace/agents")
+        assert market_response.status_code == 200
+
+        hired_ids = []
+        for marketplace_id in ["hermes_test_v010_meeting_agent_a", "hermes_test_v010_meeting_agent_b"]:
+            hire_response = client.post("/api/marketplace/hire", json={"agentId": marketplace_id})
+            assert hire_response.status_code == 200
+            hired_ids.append(hire_response.json()["officeAgentId"])
+
+        create_response = client.post("/api/meetings", json={"topic": "V0.1.0 meeting smoke", "agentIds": hired_ids})
+        assert create_response.status_code == 200
+        meeting_id = create_response.json()["id"]
+
+        round_response = client.post(f"/api/meetings/{meeting_id}/next-round")
+        assert round_response.status_code == 200
+        assert len(round_response.json()["rounds"]) >= 1
+
+        finish_response = client.post(f"/api/meetings/{meeting_id}/finish")
+        assert finish_response.status_code == 200
+        assert finish_response.json()["status"] == "finished"
+
+        outputs_response = client.get("/api/outputs")
+        assert outputs_response.status_code == 200
+        assert any(output["source"] == "meeting" and "V0.1.0 meeting smoke" in output["name"] for output in outputs_response.json())
