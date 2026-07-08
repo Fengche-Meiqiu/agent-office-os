@@ -1,4 +1,4 @@
-﻿from datetime import datetime
+from datetime import datetime
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, JSON, String, Text
 from sqlalchemy.orm import relationship
 
@@ -70,6 +70,7 @@ class Task(Base):
     ended_at = Column(DateTime, nullable=True)
     duration = Column(Integer, nullable=True)
     output_id = Column(String, nullable=True)
+    platform_task_id = Column(String, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
 
     agent = relationship("OfficeAgent", back_populates="tasks")

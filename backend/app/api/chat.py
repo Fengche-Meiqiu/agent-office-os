@@ -1,4 +1,5 @@
-﻿import uuid
+import json
+import uuid
 from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
@@ -57,7 +58,8 @@ async def send_chat_message(agent_id: str, req: ChatSendRequest, db: Session = D
                 reply_content = f"Task {task.id} is {task.status}. Result has been saved to Outputs."
             else:
                 reply_content = f"Task {task.id} is {task.status}. You can monitor it in Task Center."
-            reply_content += f"\n\n```json\n{task_data}\n```"
+            task_json = json.dumps(task_data, ensure_ascii=False, indent=2)
+            reply_content += f"\n\n```json\n{task_json}\n```"
     else:
         platform_id = agent.platform_agent_id or agent_id
         reply_data = await hermes_adapter.chat(platform_id, req.content)

@@ -39,12 +39,19 @@ def test_v010_hermes_task_flow(monkeypatch):
     async def fake_execute_task(agent_id: str, title: str, content: str):
         return {
             "task_id": "hermes_task_v010",
+            "status": "running",
+        }
+
+    async def fake_get_task(task_id: str):
+        return {
+            "task_id": task_id,
             "status": "completed",
-            "result": f"Hermes completed {title}: {content}",
+            "result": "Hermes completed async V0.1.0 task",
         }
 
     monkeypatch.setattr("app.api.marketplace.hermes_adapter.discover_agents", fake_discover_agents)
     monkeypatch.setattr("app.api.tasks.hermes_adapter.execute_task", fake_execute_task)
+    monkeypatch.setattr("app.api.tasks.hermes_adapter.get_task", fake_get_task)
 
     with TestClient(app) as client:
         market_response = client.get("/api/marketplace/agents")
@@ -61,7 +68,8 @@ def test_v010_hermes_task_flow(monkeypatch):
             json={"content": "/task Prepare V0.1.0 acceptance notes"},
         )
         assert chat_response.status_code == 200
-        assert "Result has been saved to Outputs" in chat_response.json()["content"]
+        assert "You can monitor it in Task Center" in chat_response.json()["content"]
+        assert '"status": "Running"' in chat_response.json()["content"]
 
         tasks_response = client.get("/api/tasks")
         assert tasks_response.status_code == 200
@@ -74,6 +82,7 @@ def test_v010_hermes_task_flow(monkeypatch):
         assert outputs_response.status_code == 200
         outputs = outputs_response.json()
         assert any(output["id"] == created_task["outputId"] for output in outputs)
+
 
 def test_v010_meeting_flow_creates_output(monkeypatch):
     async def fake_discover_agents():
