@@ -7,7 +7,6 @@ import Tasks from "@/pages/Tasks";
 import Outputs from "@/pages/Outputs";
 import Meeting from "@/pages/Meeting";
 import Profile from "@/pages/Profile";
-import Organization from "@/pages/Organization";
 import Tools from "@/pages/Tools";
 import Settings from "@/pages/Settings";
 import Dashboard from "@/pages/Dashboard";
@@ -34,7 +33,6 @@ export default function App() {
           <Route path="meeting" element={<Meeting />} />
           <Route path="meeting/:id" element={<Meeting />} />
           <Route path="profile/:id" element={<Profile />} />
-          <Route path="organization" element={<Organization />} />
           <Route path="tools" element={<Tools />} />
           <Route path="settings" element={<Settings />} />
           <Route path="dashboard" element={<Dashboard />} />

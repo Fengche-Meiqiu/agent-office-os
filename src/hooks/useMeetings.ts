@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { meetingApi } from '@/lib/mockApi';
+import { meetingApi } from '@/lib/api';
 
 // 获取会议列表
 export function useMeetings() {
@@ -31,7 +31,7 @@ export function useCreateMeeting() {
   });
 }
 
-// 主持人向当前轮次发送消息
+// 主持人插话
 export function useSendMeetingMessage() {
   const queryClient = useQueryClient();
   return useMutation({
@@ -44,15 +44,39 @@ export function useSendMeetingMessage() {
   });
 }
 
-// 会议进入下一轮
-export function useNextRound() {
+// V2 新增：开始会议（所有 Agent 首次发言）
+export function useStartMeeting() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (id: string) => meetingApi.nextRound(id),
+    mutationFn: (id: string) => meetingApi.start(id),
     onSuccess: (_, id) => {
       queryClient.invalidateQueries({ queryKey: ['meetings', id] });
       queryClient.invalidateQueries({ queryKey: ['meetings'] });
-      queryClient.invalidateQueries({ queryKey: ['outputs'] });
+    },
+  });
+}
+
+// V2 新增：让所有 Agent 发言
+export function useAskAll() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => meetingApi.askAll(id),
+    onSuccess: (_, id) => {
+      queryClient.invalidateQueries({ queryKey: ['meetings', id] });
+      queryClient.invalidateQueries({ queryKey: ['meetings'] });
+    },
+  });
+}
+
+// V2 新增：让指定 Agent 发言
+export function useAskAgent() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ meetingId, agentId }: { meetingId: string; agentId: string }) =>
+      meetingApi.askAgent(meetingId, agentId),
+    onSuccess: (_, { meetingId }) => {
+      queryClient.invalidateQueries({ queryKey: ['meetings', meetingId] });
+      queryClient.invalidateQueries({ queryKey: ['meetings'] });
     },
   });
 }

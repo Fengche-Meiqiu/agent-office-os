@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { outputApi } from '@/lib/mockApi';
+import { outputApi } from '@/lib/api';
 
 // 获取成果列表
 export function useOutputs() {

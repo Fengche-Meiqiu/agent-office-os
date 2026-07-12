@@ -9,13 +9,10 @@ export default defineConfig({
     sourcemap: 'hidden',
   },
   plugins: [
-    react({
-      babel: {
-        plugins: [
-          'react-dev-locator',
-        ],
-      },
-    }),
+    // 小白解释：react() 是 Vite 的 React 插件，负责编译 JSX。
+    // 之前配置了 react-dev-locator，但它在热更新时会重复注入 trae-inspector 属性，
+    // 导致 JSX 解析报错，所以这里把它去掉。
+    react(),
     traeBadgePlugin({
       variant: 'dark',
       position: 'bottom-right',

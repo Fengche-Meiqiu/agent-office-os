@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Plus, Video, MessageSquare } from 'lucide-react';
+import { Plus, Video, MessageSquare, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { PageWrapper } from '@/components/layout/PageWrapper';
 import { StatsBar } from '@/components/office/StatsBar';
@@ -7,10 +7,12 @@ import { AgentCard } from '@/components/office/AgentCard';
 import { ActivityFeed } from '@/components/office/ActivityFeed';
 import { useOfficeAgents } from '@/hooks/useAgents';
 import { useTasks } from '@/hooks/useTasks';
+import { useChatMessages } from '@/hooks/useChats';
 import { AgentAvatar } from '@/components/shared/AgentAvatar';
 import { StatusBadge } from '@/components/shared/StatusBadge';
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import type { OfficeAgent } from '@/types';
 
 export default function Office() {
   const { data: agents = [], isLoading: agentsLoading } = useOfficeAgents();
@@ -30,8 +32,8 @@ export default function Office() {
     agentTodayTasks[agent.id] = task ? task.name : '暂无任务';
   });
 
-  // 首页展示 Alice 的预览
-  const featuredAgent = agents.find((a) => a.id === 'office_alice') || agents[0];
+  // 首页展示第一个 Agent 的预览
+  const featuredAgent = agents[0];
 
   return (
     <PageWrapper className="space-y-6">
@@ -138,12 +140,12 @@ export default function Office() {
                 <div className="space-y-3">
                   <div>
                     <p className="text-xs font-semibold text-primary mb-1">Soul（人格）</p>
-                    <p className="text-sm text-muted-foreground line-clamp-2">{featuredAgent.soul.description}</p>
+                    <p className="text-sm text-muted-foreground line-clamp-2">{featuredAgent.soul?.description || '暂无描述'}</p>
                   </div>
                   <div>
                     <p className="text-xs font-semibold text-primary mb-1">Skills（技能）</p>
                     <div className="flex flex-wrap gap-1.5">
-                      {featuredAgent.skills.slice(0, 5).map((skill) => (
+                      {(featuredAgent.skills || []).slice(0, 5).map((skill) => (
                         <span key={skill} className="rounded-md bg-secondary px-2 py-0.5 text-xs">{skill}</span>
                       ))}
                     </div>
@@ -151,7 +153,7 @@ export default function Office() {
                   <div>
                     <p className="text-xs font-semibold text-primary mb-1">Tools（工具）</p>
                     <div className="flex flex-wrap gap-1.5">
-                      {featuredAgent.tools.slice(0, 4).map((tool) => (
+                      {(featuredAgent.tools || []).slice(0, 4).map((tool) => (
                         <span key={tool} className="rounded-md bg-secondary px-2 py-0.5 text-xs">{tool}</span>
                       ))}
                     </div>
@@ -160,29 +162,7 @@ export default function Office() {
                 </div>
               </Card>
 
-              <Card className="p-5 flex flex-col">
-                <div className="mb-3 flex items-center justify-between">
-                  <h3 className="font-semibold">与 {featuredAgent.name} 对话</h3>
-                  <Link to={`/chat/${featuredAgent.id}`}>
-                    <Button variant="ghost" size="icon">
-                      <MessageSquare className="h-4 w-4" />
-                    </Button>
-                  </Link>
-                </div>
-                <div className="flex-1 space-y-3 rounded-lg bg-secondary/30 p-3">
-                  <div className="flex gap-2">
-                    <AgentAvatar src={featuredAgent.avatar} name={featuredAgent.name} status={featuredAgent.status} size="sm" showStatus={false} />
-                    <div className="rounded-lg bg-white px-3 py-2 text-sm shadow-sm">
-                      请帮我分析一下上个月的用户增长数据趋势
-                    </div>
-                  </div>
-                  <div className="flex gap-2 flex-row-reverse">
-                    <div className="rounded-lg bg-primary px-3 py-2 text-sm text-white shadow-sm">
-                      好的，我来帮您分析。我将从整体增长趋势、渠道来源、用户活跃度等维度展开。
-                    </div>
-                  </div>
-                </div>
-              </Card>
+              <ChatPreviewCard agent={featuredAgent} />
             </div>
           )}
         </div>
@@ -193,5 +173,62 @@ export default function Office() {
         </div>
       </div>
     </PageWrapper>
+  );
+}
+
+/**
+ * 聊天预览卡片
+ * 展示与当前 Agent 的最近几条真实聊天记录，不再用硬编码示例数据
+ */
+function ChatPreviewCard({ agent }: { agent: OfficeAgent }) {
+  const { data: messages = [], isLoading } = useChatMessages(agent.id);
+  const recentMessages = messages.slice(-3).reverse();
+
+  return (
+    <Card className="p-5 flex flex-col">
+      <div className="mb-3 flex items-center justify-between">
+        <h3 className="font-semibold">与 {agent.name} 对话</h3>
+        <Link to={`/chat/${agent.id}`}>
+          <Button variant="ghost" size="icon">
+            <MessageSquare className="h-4 w-4" />
+          </Button>
+        </Link>
+      </div>
+      <div className="flex-1 rounded-lg bg-secondary/30 p-3">
+        {isLoading ? (
+          <div className="space-y-3">
+            {[1, 2].map((i) => (
+              <div key={i} className="h-10 animate-pulse rounded-md bg-muted" />
+            ))}
+          </div>
+        ) : recentMessages.length > 0 ? (
+          <div className="space-y-3">
+            {recentMessages.map((msg) => (
+              <div
+                key={msg.id}
+                className={`flex gap-2 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}
+              >
+                {msg.role === 'agent' ? (
+                  <AgentAvatar src={agent.avatar} name={agent.name} status={agent.status} size="sm" showStatus={false} />
+                ) : (
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-xs text-white">
+                    我
+                  </div>
+                )}
+                <div
+                  className={`max-w-[80%] rounded-lg px-3 py-2 text-sm shadow-sm ${
+                    msg.role === 'user' ? 'bg-primary text-white' : 'bg-white'
+                  }`}
+                >
+                  {msg.content.length > 60 ? msg.content.slice(0, 60) + '...' : msg.content}
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-sm text-muted-foreground">暂无对话，点击右侧图标开始聊天</p>
+        )}
+      </div>
+    </Card>
   );
 }

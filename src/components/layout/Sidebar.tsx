@@ -6,7 +6,6 @@ import {
   CheckSquare,
   FolderOpen,
   Users,
-  Network,
   Settings,
   Wrench,
   BarChart3,
@@ -29,7 +28,6 @@ const mainNavItems: NavItem[] = [
   { label: 'Agent 管理', path: '/marketplace', icon: Store },
   { label: '聊天中心', path: '/chat', icon: MessageSquare },
   { label: '成果中心', path: '/outputs', icon: FolderOpen },
-  { label: '组织架构', path: '/organization', icon: Network },
 ];
 
 const bottomNavItems: NavItem[] = [
@@ -88,32 +86,6 @@ export function Sidebar() {
         {mainNavItems.map((item) => (
           <NavItemRenderer key={item.path} item={item} collapsed={sidebarCollapsed} />
         ))}
-
-        {!sidebarCollapsed && (
-          <div className="pt-4 pb-2">
-            <p className="px-3 text-xs font-semibold text-muted-foreground">我的收藏</p>
-          </div>
-        )}
-        {sidebarCollapsed && <div className="my-3 border-t" />}
-        {/* 收藏的快速入口 */}
-        {!sidebarCollapsed && (
-          <div className="space-y-1">
-            <NavLink
-              to="/profile/office_alice"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-            >
-              <div className="h-5 w-5 rounded-full bg-blue-100" />
-              Alice（分析师）
-            </NavLink>
-            <NavLink
-              to="/profile/office_bob"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-            >
-              <div className="h-5 w-5 rounded-full bg-purple-100" />
-              Bob（开发工程师）
-            </NavLink>
-          </div>
-        )}
       </nav>
 
       {/* 底部导航 */}

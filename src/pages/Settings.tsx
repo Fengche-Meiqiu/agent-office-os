@@ -1,46 +1,29 @@
-import { useState } from 'react';
-import { Moon, Sun, Bell, Database, Trash2, Globe, Shield } from 'lucide-react';
+﻿import { useState } from 'react';
+import { Moon, Sun, Bell, Globe, Shield } from 'lucide-react';
 import { PageWrapper } from '@/components/layout/PageWrapper';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from '@/components/ui/dialog';
 import { useTheme } from '@/hooks/useTheme';
-import { resetMockData } from '@/lib/mockApi';
+import { useLanguage } from '@/i18n';
 
 /**
- * 系统设置页面
- * 提供外观主题、通知、语言等常用设置，以及重置模拟数据的功能
+ * 系统设置页面（V2：移除重置模拟数据按钮）
+ *
+ * 小白解释：这里可以切换深色/浅色模式、开关通知、选语言。
+ * V2 版本不再有"重置模拟数据"按钮，因为最终交付不含测试数据。
  */
 export default function Settings() {
-  const { theme, toggleTheme, isDark } = useTheme();
+  const { toggleTheme, isDark } = useTheme();
   const [notifications, setNotifications] = useState(true);
-  const [language, setLanguage] = useState<'zh' | 'en'>('zh');
-  const [resetDialogOpen, setResetDialogOpen] = useState(false);
-
-  /**
-   * 重置所有模拟数据并刷新页面
-   * 这样 LocalStorage 会恢复到初始种子数据
-   */
-  const handleReset = () => {
-    resetMockData();
-    window.location.reload();
-  };
+  const { locale, setLocale } = useLanguage();
 
   return (
     <PageWrapper className="space-y-6">
       {/* 页面标题 */}
       <div>
         <h1 className="text-2xl font-bold font-display">系统设置</h1>
-        <p className="text-sm text-muted-foreground">管理界面主题、通知偏好与本地数据</p>
+        <p className="text-sm text-muted-foreground">管理界面主题与通知偏好</p>
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -101,64 +84,26 @@ export default function Settings() {
             </div>
             <div>
               <h3 className="font-semibold">语言</h3>
-              <p className="text-xs text-muted-foreground">选择界面显示语言（V1 仅展示）</p>
+              <p className="text-xs text-muted-foreground">选择界面显示语言</p>
             </div>
           </div>
 
           <div className="flex gap-2">
             <Button
-              variant={language === 'zh' ? 'default' : 'outline'}
+              variant={locale === 'zh-CN' ? 'default' : 'outline'}
               size="sm"
-              onClick={() => setLanguage('zh')}
+              onClick={() => setLocale('zh-CN')}
             >
               简体中文
             </Button>
             <Button
-              variant={language === 'en' ? 'default' : 'outline'}
+              variant={locale === 'en-US' ? 'default' : 'outline'}
               size="sm"
-              onClick={() => setLanguage('en')}
+              onClick={() => setLocale('en-US')}
             >
               English
             </Button>
           </div>
-        </Card>
-
-        {/* 数据管理 */}
-        <Card className="p-5">
-          <div className="mb-4 flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-destructive/10 text-destructive">
-              <Database className="h-5 w-5" />
-            </div>
-            <div>
-              <h3 className="font-semibold">本地数据</h3>
-              <p className="text-xs text-muted-foreground">重置为初始演示数据</p>
-            </div>
-          </div>
-
-          <Dialog open={resetDialogOpen} onOpenChange={setResetDialogOpen}>
-            <DialogTrigger asChild>
-              <Button variant="destructive" size="sm" className="gap-2">
-                <Trash2 className="h-4 w-4" />
-                重置模拟数据
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>确认重置数据？</DialogTitle>
-                <DialogDescription>
-                  这会把所有本地存储的 Agent、任务、会议等数据恢复到初始演示状态，无法撤销。
-                </DialogDescription>
-              </DialogHeader>
-              <DialogFooter>
-                <Button variant="outline" onClick={() => setResetDialogOpen(false)}>
-                  取消
-                </Button>
-                <Button variant="destructive" onClick={handleReset}>
-                  确认重置
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
         </Card>
       </div>
 
@@ -168,8 +113,9 @@ export default function Settings() {
           <Shield className="h-4 w-4" />
           <span>Agent Office OS</span>
         </div>
-        <Badge variant="outline">V1.0.0</Badge>
+        <Badge variant="outline">V2.0.0</Badge>
       </div>
     </PageWrapper>
   );
 }
+

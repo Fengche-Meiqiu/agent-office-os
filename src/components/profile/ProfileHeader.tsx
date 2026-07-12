@@ -17,8 +17,14 @@ export function ProfileHeader({ agent }: ProfileHeaderProps) {
 
   const handleFire = () => {
     if (confirm(`确定要解雇 ${agent.name} 吗？`)) {
+      // 小白解释：先跳转回首页，再执行解雇。
+      // 如果先执行解雇，React Query 刷新缓存时会让档案页闪现"未找到该员工"，
+      // 看起来像报错。先跳走就能避免这个闪现。
+      navigate('/');
       fireMutation.mutate(agent.id, {
-        onSuccess: () => navigate('/'),
+        onError: (err) => {
+          alert(`解雇失败：${err instanceof Error ? err.message : '未知错误'}`);
+        },
       });
     }
   };

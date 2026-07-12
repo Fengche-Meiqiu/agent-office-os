@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { eventLogApi } from '@/lib/mockApi';
+import { eventLogApi } from '@/lib/api';
 
 // 获取系统事件日志
 export function useEventLogs() {

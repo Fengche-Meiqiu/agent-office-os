@@ -5,7 +5,7 @@ export type AgentStatus = 'ONLINE' | 'WORKING' | 'MEETING' | 'OFFLINE' | 'ERROR'
 export type TaskStatus = 'Pending' | 'Running' | 'Completed' | 'Failed' | 'Cancelled';
 
 // 平台类型
-export type Platform = 'Hermes' | 'OpenClaw' | 'CrewAI' | 'LangGraph';
+export type Platform = 'Hermes';
 
 // 人才市场 Agent
 export interface MarketplaceAgent {
@@ -14,10 +14,12 @@ export interface MarketplaceAgent {
   avatar: string;
   title: string;
   platform: Platform;
+  platformAgentId: string;
   skills: string[];
   tools: string[];
   status: 'ONLINE' | 'OFFLINE' | 'BUSY';
   description: string;
+  soul: AgentSoul;
 }
 
 // Soul 人格
@@ -58,7 +60,7 @@ export interface OfficeAgent {
   performance: AgentPerformance;
 }
 
-// 任务
+// 任务（V2 扩展：result/progress/currentStep/skillIds）
 export interface Task {
   id: string;
   name: string;
@@ -69,31 +71,33 @@ export interface Task {
   endedAt?: string;
   duration?: number;
   outputId?: string;
+  // V2 新增
+  result?: string;
+  progress?: number;
+  currentStep?: string;
+  skillIds?: string[];
 }
 
 // 会议消息
+// 小白解释：会议里的一条发言，可以是 Agent 说的，也可以是主持人（用户）说的。
+// round / roundName 是可选的，用来标记这条消息属于第几轮讨论。
 export interface MeetingMessage {
   role: 'user' | 'agent';
   agentId?: string;
   agentName?: string;
   content: string;
   timestamp: string;
+  round?: number;
+  roundName?: string;
 }
 
-// 会议轮次
-export interface MeetingRound {
-  round: number;
-  name: string;
-  messages: MeetingMessage[];
-}
-
-// 会议
+// 会议（V2 重构：rounds → messages 扁平列表）
 export interface Meeting {
   id: string;
   topic: string;
   agentIds: string[];
   status: 'created' | 'running' | 'finished';
-  rounds: MeetingRound[];
+  messages: MeetingMessage[];
   summary?: string;
   decisions?: string[];
   actions?: string[];
@@ -117,6 +121,8 @@ export interface ChatMessage {
   agentId: string;
   role: 'user' | 'agent';
   content: string;
+  // 小白解释：Hermes 返回 true 时，表示这条回复建议改用 /task 任务模式
+  suggestTask?: boolean;
   timestamp: string;
 }
 

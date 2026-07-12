@@ -81,11 +81,11 @@ export default function Profile() {
               <InfoItem label="Agent ID" value={agent.id} />
               <InfoItem label="平台 ID" value={agent.platformAgentId} />
               <InfoItem label="平台" value={agent.platform} />
-              <InfoItem label="职位" value={agent.title} />
+              <InfoItem label="职位" value={agent.title || '待上线'} />
               <InfoItem label="创建时间" value={new Date(agent.hiredAt).toLocaleString('zh-CN')} />
               <InfoItem label="最后活跃时间" value={new Date(agent.lastActiveAt).toLocaleString('zh-CN')} />
-              <InfoItem label="部门" value={agent.department || '未分配'} />
-              <InfoItem label="直属上级" value={agent.managerId === 'ceo' ? 'CEO' : agent.managerId || '未设置'} />
+              <InfoItem label="部门" value={agent.department || '待上线'} />
+              <InfoItem label="直属上级" value={agent.managerId === 'ceo' ? 'CEO' : agent.managerId || '待上线'} />
             </div>
           </Card>
         </TabsContent>
@@ -95,11 +95,11 @@ export default function Profile() {
           <Card className="p-6">
             <h3 className="mb-4 text-lg font-semibold">Soul（人格）</h3>
             <div className="space-y-4">
-              <SoulItem label="身份" value={agent.soul.identity} />
-              <SoulItem label="目标" value={agent.soul.goal} />
-              <SoulItem label="原则" value={agent.soul.principles} />
-              <SoulItem label="行为风格" value={agent.soul.style} />
-              <SoulItem label="人格描述" value={agent.soul.description} />
+              <SoulItem label="身份" value={agent.soul?.identity || '待上线'} />
+              <SoulItem label="目标" value={agent.soul?.goal || '待上线'} />
+              <SoulItem label="原则" value={agent.soul?.principles || '待上线'} />
+              <SoulItem label="行为风格" value={agent.soul?.style || '待上线'} />
+              <SoulItem label="人格描述" value={agent.soul?.description || '待上线'} />
             </div>
           </Card>
         </TabsContent>
@@ -262,8 +262,8 @@ export default function Profile() {
             <h3 className="mb-4 text-lg font-semibold">Employment（雇佣信息）</h3>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <InfoItem label="雇佣时间" value={new Date(agent.hiredAt).toLocaleString('zh-CN')} />
-              <InfoItem label="部门" value={agent.department || '未分配'} />
-              <InfoItem label="直属上级" value={agent.managerId === 'ceo' ? 'CEO' : agent.managerId || '未设置'} />
+              <InfoItem label="部门" value={agent.department || '待上线'} />
+              <InfoItem label="直属上级" value={agent.managerId === 'ceo' ? 'CEO' : agent.managerId || '待上线'} />
               <InfoItem label="状态" value={agent.status} />
               <InfoItem label="平台" value={agent.platform} />
               <InfoItem label="平台 Agent ID" value={agent.platformAgentId} />
