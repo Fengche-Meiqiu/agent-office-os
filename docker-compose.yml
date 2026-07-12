@@ -1,17 +1,4 @@
-# Agent Office OS Docker Compose 部署配置
-# 与 Hermes 共存于同一台服务器
-#
-# 使用方式：
-#   docker-compose up -d        启动
-#   docker-compose logs -f      查看日志
-#   docker-compose down         停止
-#
-# 部署前请修改 HERMES_URL 为实际 Hermes 地址
-
-version: "3.8"
-
-services:
-  # ===== Office OS 后端 =====
+﻿services:
   office-backend:
     build: ./backend
     container_name: office-backend
@@ -23,34 +10,40 @@ services:
       - DEBUG=false
       - PORT=8000
       - WORKERS=1
-      # Hermes API 桥地址（Hermes 在宿主机 127.0.0.1:8001 运行）
-      - HERMES_URL=http://host.docker.internal:8001
-    # Linux 下 Docker 默认不支持 host.docker.internal，需要额外配置
-    # 这行让容器内的 host.docker.internal 指向宿主机
+      - HERMES_URL=${HERMES_URL:-http://host.docker.internal:8001}
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
-      # 持久化数据库和文件（防止容器重建后数据丢失）
       - office-data:/app/data
       - office-storage:/app/storage
-    # 内存限制：最多 512MB（服务器剩余 2.3G，留足余量）
     mem_limit: 512m
     mem_reservation: 256m
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health', timeout=3).read()"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
 
-  # ===== Nginx 反向代理 =====
-  # 将前端静态文件 + 后端 API + Hermes 统一在同一端口暴露
   nginx:
     image: nginx:alpine
     container_name: office-nginx
     restart: always
     ports:
-      - "80:80"
+      - "${OFFICE_HTTP_PORT:-8080}:80"
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
       - ./frontend-dist:/usr/share/nginx/html:ro
     depends_on:
-      - office-backend
+      office-backend:
+        condition: service_healthy
     mem_limit: 128m
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1/ >/dev/null 2>&1 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 10s
 
 volumes:
   office-data:
